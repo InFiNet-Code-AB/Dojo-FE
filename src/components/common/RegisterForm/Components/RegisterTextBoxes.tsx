@@ -27,14 +27,6 @@ const RegisterTextBoxes: React.FC<RegisterTextBoxesProps> = ({
         onChange={handleChange}
       />
       <TEInput
-        name="firstName"
-        type="text"
-        label="FirstName"
-        className="mb-4"
-        value={formData.firstName}
-        onChange={handleChange}
-      />
-      <TEInput
         name="lastName"
         type="text"
         label="LastName"

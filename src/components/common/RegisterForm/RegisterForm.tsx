@@ -5,16 +5,20 @@ import RoleCheckboxes from "../RegisterForm/Components/RoleCheckboxes";
 import Button from "../Button/Button";
 import WideButton from "../Button/WideButton";
 import ProgrammingLogos from "../ProgrammingLogos/ProgammingLogos";
+import { registerUser } from "../../../services/api";
+import { RegisterUser } from "../../../types/RegisterUser";
 
 const RegisterForm: React.FC = () => {
-  const [formData, setFormData] = useState({
+  const initialFormData: RegisterUser = {
     firstName: "",
     lastName: "",
     email: "",
     password: "",
     confirmPassword: "",
     role: "Student", // Default role
-  });
+  };
+
+  const [formData, setFormData] = useState<RegisterUser>(initialFormData);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -24,10 +28,17 @@ const RegisterForm: React.FC = () => {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission, e.g., send formData to backend
-    console.log(formData);
+    const currentFormData = { ...formData };
+    setFormData(initialFormData);
+
+    try {
+      await registerUser(currentFormData);
+    } catch (error) {
+      console.error(error);
+      setFormData(currentFormData);
+    }
   };
 
   return (
