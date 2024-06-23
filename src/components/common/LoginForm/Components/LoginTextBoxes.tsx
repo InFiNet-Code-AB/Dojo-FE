@@ -3,7 +3,7 @@ import { TEInput } from "tw-elements-react";
 
 interface LoginTextBoxesProps {
   formData: {
-    username: string;
+    email: string;
     password: string;
   };
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -16,10 +16,10 @@ const LoginTextBoxes: React.FC<LoginTextBoxesProps> = ({
   return (
     <>
       <TEInput
-        type="text"
-        label="Username"
-        name="username"
-        value={formData.username}
+        type="email"
+        label="Email"
+        name="email"
+        value={formData.email}
         onChange={handleChange}
         className="mb-4"
       />

@@ -1,15 +1,17 @@
 import React, { useState } from "react";
+import { loginUser } from "../../../services/api"; // Kontrollera sökvägen här
 import Logo from "../InfinetLogo/InfinetLogo";
-import LoginTextBoxes from "../LoginForm/Components/LoginTextBoxes"; // Importera LoginTextBoxes
+import LoginTextBoxes from "../LoginForm/Components/LoginTextBoxes";
 import WideButton from "../Button/WideButton";
 import Button from "../Button/Button";
 import ProgrammingLogos from "../ProgrammingLogos/ProgammingLogos";
 
 const LoginForm: React.FC = () => {
   const [formData, setFormData] = useState({
-    username: "",
+    email: "",
     password: "",
   });
+  const [error, setError] = useState<string | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -19,9 +21,17 @@ const LoginForm: React.FC = () => {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(formData);
+    try {
+      console.log("FormData:", formData); // Kontrollera att formData är korrekt
+      const token = await loginUser(formData);
+      localStorage.setItem("jwtToken", token); // Spara JWT-token i localStorage
+      console.log("Login successful, token:", token);
+    } catch (error) {
+      setError("Login failed. Please check your credentials and try again.");
+      console.error("Login error:", error);
+    }
   };
 
   return (
@@ -38,16 +48,15 @@ const LoginForm: React.FC = () => {
                     </div>
                     <form onSubmit={handleSubmit}>
                       <p className="mb-4">Please login to your account</p>
+                      {error && <p className="text-red-500">{error}</p>}
                       <LoginTextBoxes
                         formData={formData}
                         handleChange={handleChange}
                       />
-                      {/* <!-- Register Account button --> */}
                       <div className="mb-12 pb-1 pt-1 text-center">
                         <WideButton type="submit" text="LOG IN" />
                         <a href="#!">Forgot password?</a>
                       </div>
-                      {/* <!-- Login button --> */}
                       <div className="flex items-center justify-between pb-6">
                         <p className="mb-0 mr-2">Don't have an account?</p>
                         <Button type="button">Register</Button>
@@ -55,7 +64,6 @@ const LoginForm: React.FC = () => {
                     </form>
                   </div>
                 </div>
-                {/* <!-- Right column container with logos --> */}
                 <div
                   className="flex items-center rounded-b-lg lg:w-6/12 lg:rounded-r-lg lg:rounded-bl-none"
                   style={{
